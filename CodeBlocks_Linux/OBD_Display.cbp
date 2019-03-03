@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ObdDisplay" />
+		<Option platforms="Unix;" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Unix;" />
+				<Option output="linux/ObdDisplay" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option platforms="Unix;" />
+				<Option output="linux/ObdDisplay" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="`pkg-config --cflags gtk+-2.0 libxml-2.0`" />
+			<Add directory="$(#can_api.include)" />
+			<Add directory="../src" />
+			<Add directory="../src/lib" />
+			<Add directory="../src/obd" />
+			<Add directory="../src/LinuxLib" />
+		</Compiler>
+		<Linker>
+			<Add option="`pkg-config --libs gtk+-2.0 libxml-2.0`" />
+			<Add library="dl" />
+			<Add library="m" />
+			<Add library="pthread" />
+			<Add library="c" />
+		</Linker>
+		<ExtraCommands>
+			<Add after="cp -p $(PROJECT_DIR)/../res/* $(PROJECT_DIR)/linux" />
+		</ExtraCommands>
+		<Unit filename="../../dev/lib/can_drv.h" />
+		<Unit filename="../../dev/lib/can_drv_config.h" />
+		<Unit filename="../../dev/lib/can_drv_ex.h" />
+		<Unit filename="../../dev/lib/can_types.h" />
+		<Unit filename="../../dev/lib/mhs_can_drv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/LinuxLib/mhs_event.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/LinuxLib/mhs_event.h" />
+		<Unit filename="../src/LinuxLib/mhs_thread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/can_autobaud.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/can_autobaud.h" />
+		<Unit filename="../src/lcd_gauge_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lcd_gauge_win.h" />
+		<Unit filename="../src/lib/cbuf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/cbuf.h" />
+		<Unit filename="../src/lib/configfile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/configfile.h" />
+		<Unit filename="../src/lib/etable.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/etable.h" />
+		<Unit filename="../src/lib/gauge-private.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gauge-private.h" />
+		<Unit filename="../src/lib/gauge-xml.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gauge-xml.h" />
+		<Unit filename="../src/lib/gauge.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gauge.h" />
+		<Unit filename="../src/lib/gtk-digital-show.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gtk-digital-show.h" />
+		<Unit filename="../src/lib/gtk-ex-frame.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gtk-ex-frame.h" />
+		<Unit filename="../src/lib/gtk-lcd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gtk-lcd.h" />
+		<Unit filename="../src/lib/gtk_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/gtk_util.h" />
+		<Unit filename="../src/lib/iconcache.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/iconcache.h" />
+		<Unit filename="../src/lib/mhs_g_event.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/mhs_g_event.h" />
+		<Unit filename="../src/lib/mhs_g_messages.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/mhs_g_messages.h" />
+		<Unit filename="../src/lib/mhs_queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/mhs_queue.h" />
+		<Unit filename="../src/lib/mhs_thread.h" />
+		<Unit filename="../src/lib/msg_widget.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/msg_widget.h" />
+		<Unit filename="../src/lib/util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/util.h" />
+		<Unit filename="../src/lib/xmlbase.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lib/xmlbase.h" />
+		<Unit filename="../src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/main.h" />
+		<Unit filename="../src/mhs_msg_types.h" />
+		<Unit filename="../src/obd/can_dev_pnp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/can_dev_pnp.h" />
+		<Unit filename="../src/obd/can_device.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/can_device.h" />
+		<Unit filename="../src/obd/dtc_db.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/dtc_db.h" />
+		<Unit filename="../src/obd/isotp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/isotp.h" />
+		<Unit filename="../src/obd/obd2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/obd2.h" />
+		<Unit filename="../src/obd/obd_db.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/obd_db.h" />
+		<Unit filename="../src/obd/obd_pids.h" />
+		<Unit filename="../src/obd/obd_types.h" />
+		<Unit filename="../src/obd/vin_db.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd/vin_db.h" />
+		<Unit filename="../src/obd2_dtc_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd2_dtc_win.h" />
+		<Unit filename="../src/obd2_list_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd2_list_win.h" />
+		<Unit filename="../src/obd2_pid_sel.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/obd2_pid_sel.h" />
+		<Unit filename="../src/obd_disp_icons.h" />
+		<Unit filename="../src/setup.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/setup.h" />
+		<Unit filename="../src/start_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/start_win.h" />
+		<Unit filename="../src/trace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/trace.h" />
+		<Unit filename="../src/vin_info_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/vin_info_win.h" />
+		<Unit filename="../src/vin_wdg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/vin_wdg.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder>
+				<lib name="libxml-2.0" />
+				<lib name="gtk+-2.0" />
+			</lib_finder>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

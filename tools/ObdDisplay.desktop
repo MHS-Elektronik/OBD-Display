@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=OBD Display
+Exec=/opt/OBD-Display/linux/bin/ObdDisplay

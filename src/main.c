@@ -39,9 +39,6 @@
 #include "vin_db.h"
 #include "main.h"
 
-#define OBD2_TX_ID 0x7DF
-#define OBD2_RX_ID 0x7E8
-
 #define START_PAGE_INDEX           0
 #define DEFAULT_VALUES_PAGE_INDEX  1
 #define OBD_LIST_PAGE_INDEX        2
@@ -192,9 +189,11 @@ if ((index == MENU_PAGE_INDEX) || (index == START_PAGE_INDEX))
   gtk_widget_hide(MainWin.StatusBar);
 else
   {
+  vin = NULL;
   gtk_widget_show(MainWin.StatusBar);
   vin_data = Obd2ValueGetAsString(MainWin.Obd2, 9, PID_GET_VIN, NULL);
-  vin = &vin_data[1];
+  if (vin_data)
+    vin = &vin_data[1];
   saved_dtcs_num = Obd2ValueGetAsU32(MainWin.Obd2, 1, PID_MONITOR_STATUS_DTCS, NULL);
   saved_dtcs_num = (saved_dtcs_num >> 24) & 0x7F;
   if (saved_dtcs_num)
@@ -205,10 +204,13 @@ else
     safe_free(str);
     }
   else
-    gtk_widget_hide(MainWin.StatusEventBox);  
-  str = g_markup_printf_escaped("<span foreground=\"blue\">Verbunden mit: <b>%s</b></span>", vin);
-  gtk_label_set_markup(GTK_LABEL(MainWin.StatusInfoText), str);
-  safe_free(str);
+    gtk_widget_hide(MainWin.StatusEventBox);
+  if (vin)
+    {
+    str = g_markup_printf_escaped("<span foreground=\"blue\">Verbunden mit: <b>%s</b></span>", vin);
+    gtk_label_set_markup(GTK_LABEL(MainWin.StatusInfoText), str);
+    safe_free(str);
+    }
   safe_free(vin_data);
   }
 gtk_notebook_set_current_page(GTK_NOTEBOOK(MainWin.Notebook), index);
@@ -471,7 +473,7 @@ safe_free(filename);
 
 if ((MainWin.CanDevice = CanDevCreate(5000)))
   {
-  if ((MainWin.Isotp = IsotpCreate(MainWin.CanDevice, 0)))
+  if ((MainWin.Isotp = IsotpCreate(MainWin.CanDevice, CAN_ISOTP_TX_PADDING)))
     {
     IsotpIdSetup(MainWin.Isotp, OBD2_TX_ID, OBD2_RX_ID, 0);
     if ((MainWin.Obd2 = Obd2Create(MainWin.Isotp, Obd2EventCB, &MainWin)))

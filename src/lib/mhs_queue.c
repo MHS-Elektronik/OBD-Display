@@ -139,6 +139,15 @@ return(item->Data);
 }
 
 
+void mhs_queue_clear(TMhsQueue *queue)
+{
+void *data;
+
+while ((data = mhs_queue_pop(queue)))
+  mhs_queue_data_free(data);
+}
+
+
 void mhs_queue_data_free(void *data)
 {
 struct TMhsQueueHeader *header;

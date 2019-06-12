@@ -2,6 +2,7 @@
                         can_device.c  -  description
                              -------------------
     begin             : 27.01.2019
+    last modify       : 24.04.2019
     copyright         : (C) 2019 by MHS-Elektronik GmbH & Co. KG, Germany
                                http://www.mhs-elektronik.de
     autho             : Klaus Demlehner, klaus@mhs-elektronik.de
@@ -20,6 +21,7 @@
 #include "can_drv.h"
 #include "can_device.h"
 
+// #define ENABLE_LOG
 
 #ifdef __WIN32__
   #deinfe DRIVER_FILE "mhstcan.dll"
@@ -30,7 +32,12 @@
 #endif
 
 #define TREIBER_INIT "CanCallThread=0"
-#define CREATE_DEVICE_OPTIONS "CanRxDFifoSize=16384;CanTxDFifoSize=16384"
+
+#ifdef ENABLE_LOG
+  #define CREATE_DEVICE_OPTIONS "logfile=/opt/obd-log.txt;logflags=0x21;CanRxDFifoSize=16384;CanTxDFifoSize=16384"
+#else
+  #define CREATE_DEVICE_OPTIONS "CanRxDFifoSize=16384;CanTxDFifoSize=16384"
+#endif  
 
 #define RX_EVENT     0x00000001
 #define STATUS_EVENT 0x00000002
@@ -60,7 +67,7 @@ if (!CanCore)
   }
 if (!(can_device = (struct TCanDevice *)g_malloc0(sizeof(struct TCanDevice))))
   return(NULL);
-can_device->CanCore = CanCore;  
+can_device->CanCore = CanCore;
 can_device->EventTimeout = timeout;
 safe_free(can_device->LastErrorString);
 err = 0;
@@ -174,7 +181,7 @@ if (CanCore->Status < 0)
 // **** Schnittstelle PC <-> Tiny-CAN öffnen
 if (snr)
   str = g_strdup_printf("Snr=%s", snr);
-if ((err = CanDeviceOpen(can_device->DeviceIndex, str) < 0))
+if ((err = CanDeviceOpen(can_device->DeviceIndex, str)) < 0)
   can_device->LastErrorString = g_strdup_printf("CanDeviceOpen Error-Code:%d", err);
 safe_free(str);
 if (!err)
@@ -188,7 +195,7 @@ if (!err)
   can_device->TinyCanInfoStr = g_strdup(str);
   } */
 if (!err)
-  {    
+  {
   /*****************************************/
   /*  CAN Speed einstellen & Bus starten   */
   /*****************************************/
@@ -205,7 +212,7 @@ if (!err)
   }
 else
   can_device->Status = DEV_CAN_OPEN_ERROR;
-return(0);
+return(err);
 }
 
 
@@ -348,13 +355,16 @@ while (thread->Run)
         break;
       for (msg = can_device->RxTempBuffer; size; size--)
         {
-        mhs_enter_critical((TMhsEvent *)can_device->Thread);
-        for (handler = can_device->CanDevRxHandler; handler; handler = handler->Next)
+        if (!msg->MsgTxD)
           {
-          if (handler->Proc)
-            (handler->Proc)(can_device, msg, handler->UserData);
+          mhs_enter_critical((TMhsEvent *)can_device->Thread);
+          for (handler = can_device->CanDevRxHandler; handler; handler = handler->Next)
+            {
+            if (handler->Proc)
+              (handler->Proc)(can_device, msg, handler->UserData);
+            }
+          mhs_leave_critical((TMhsEvent *)can_device->Thread);
           }
-        mhs_leave_critical((TMhsEvent *)can_device->Thread);
         msg++;
         }
       }

@@ -48,7 +48,7 @@
 		<Unit filename="../../dev/lib/can_drv_config.h" />
 		<Unit filename="../../dev/lib/can_drv_ex.h" />
 		<Unit filename="../../dev/lib/can_types.h" />
-		<Unit filename="../../dev/lib/mhs_can_drv.c">
+		<Unit filename="../../tiny_can/dev/lib/mhs_can_drv.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/LinuxLib/mhs_event.c">

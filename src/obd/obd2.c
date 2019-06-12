@@ -2,7 +2,7 @@
                             obd2.c  -  description
                              -------------------
     begin             : 19.01.2019
-    last modify       : 10.02.2019
+    last modify       : 26.04.2019
     copyright         : (C) 2019 by MHS-Elektronik GmbH & Co. KG, Germany
                                http://www.mhs-elektronik.de
     autho             : Klaus Demlehner, klaus@mhs-elektronik.de
@@ -91,7 +91,9 @@ static int32_t Obd2GetData(TObd2 *obd, TOBD2Data *obd_data)
 const TOBD2Cmd *cmd;
 uint8_t *rx_data;
 uint32_t rx_size;
+int32_t res;
 
+res = 0;
 if (!(cmd = obd_data->Cmd))
   return(-1);
 if (IsotpSendReceive(obd->Isotp, cmd->Payload, 2, &rx_data, &rx_size, 1000) < 0)
@@ -100,31 +102,38 @@ if (IsotpSendReceive(obd->Isotp, cmd->Payload, 2, &rx_data, &rx_size, 1000) < 0)
 if (cmd->DataLength)
   {
   if (rx_size != cmd->DataLength)
-    return(-1);
+    res = -1;
   }
 else
   {
   if (rx_size < 3)
-    return(-1);
+    res = -1;
   }
-// Mode / SID prüfen
-if (cmd->Flags & 0x01)
+if (!res)
   {
-  if (rx_data[0] != (OBD2CmdGetMode(cmd) | 0x40))
-    return(-1);
+  // Mode / SID prüfen
+  if (cmd->Flags & 0x01)
+    {
+    if (rx_data[0] != (OBD2CmdGetMode(cmd) | 0x40))
+      res = -1;
+    }
+  else
+    {
+    if ((rx_data[0] != (OBD2CmdGetMode(cmd) | 0x40)) || (rx_data[1] != OBD2CmdGetPID(cmd)))
+      res = -1;
+    }
   }
-else
+if (!res)
   {
-  if ((rx_data[0] != (OBD2CmdGetMode(cmd) | 0x40)) || (rx_data[1] != OBD2CmdGetPID(cmd)))
-    return(-1);
+  if (cmd->ResponseDecoder)
+    (cmd->ResponseDecoder)(obd_data, rx_data, rx_size);
+  if (cmd->Scale > 0.0f)
+    obd_data->ObdValue1 = obd_data->ObdValue1 * cmd->Scale + cmd->Offset;
+  obd_data->Status = 0x01;
+  obd_data->Update = 0xFF;
   }
-if (cmd->ResponseDecoder)
-  (cmd->ResponseDecoder)(obd_data, rx_data, rx_size);
-if (cmd->Scale > 0.0f)
-  obd_data->ObdValue1 = obd_data->ObdValue1 * cmd->Scale + cmd->Offset;
-obd_data->Status = 0x01;
-obd_data->Update = 0xFF;
-return(0);
+mhs_queue_data_free(rx_data);
+return(res);
 }
 
 
@@ -179,24 +188,24 @@ if (!res)
       continue;
     pid = OBD2CmdGetPID(obd_data_item->Cmd);
 
-		if (pid <= 0x20)
+    if (pid <= 0x20)
       {
-			if (supported_pids[0] & (1 << (0x20 - pid)))  // Supported PIDs 1 - 20
+      if (supported_pids[0] & (1 << (0x20 - pid)))  // Supported PIDs 1 - 20
         obd_data_item->Supported = 1;
-		  }
+      }
     else if (pid <= 0x40)
       {
-			if (supported_pids[1] & (1 << (0x40 - pid))) // Supported PIDs 21 - 40
+      if (supported_pids[1] & (1 << (0x40 - pid))) // Supported PIDs 21 - 40
         obd_data_item->Supported = 1;
-		  }
+      }
     else if (pid <= 0x60)
       {
-			if (supported_pids[2] & (1 << (0x60 - pid))) // Supported PIDs 41 - 60
+      if (supported_pids[2] & (1 << (0x60 - pid))) // Supported PIDs 41 - 60
         obd_data_item->Supported = 1;
-		  }
+      }
     else
       {
-			if (supported_pids[3] & (1 << (0x80 - pid))) // Supported PIDs 61 - 80
+      if (supported_pids[3] & (1 << (0x80 - pid))) // Supported PIDs 61 - 80
         obd_data_item->Supported = 1;
       }
     }
@@ -220,11 +229,14 @@ for (idx = 0; idx < obd_data_size; idx++)
     continue;
   if ((obd_data_item->Cmd->Flags & 0x80))
     continue;
+  if ((!obd_data_item->Supported) || (!obd_data->Enabled))
+    continue;  
   if (Obd2GetData(obd, obd_data_item) < 0)
-    {
+    continue;
+    /*{ 
     //res = -1; <*> noch prüfen ?
     break;
-    }
+    } */
   if (mhs_sleep_ex((TMhsEvent *)obd->Thread, 100))  // <*> Zeit
     {
     res = -1;
@@ -375,7 +387,7 @@ for (cmd = OBD2Db; cmd->Name; cmd++)
     }
   }
 // *** Speicher für "VehicleInformation" allokieren
-if (!(obd->VehicleInformation = (TOBD2Data *)mhs_malloc0((size * sizeof(TOBD2Data)))))
+if (!(obd->VehicleInformation = (TOBD2Data *)mhs_malloc0((vehicle_inf_size * sizeof(TOBD2Data)))))
   {
   Obd2Destroy(&obd);
   return(NULL);
@@ -409,7 +421,6 @@ for (cmd = OBD2Db; cmd->Name; cmd++)
 
 if (!(obd->Thread = mhs_create_thread(Obd2ThreadExecute, obd, MHS_THREAD_PRIORITY_NORMAL, 0)))
   Obd2Destroy(&obd);
-  //err = -1;  // <*>
 else
   mhs_event_set_event_mask((TMhsEvent *)obd->Thread, MHS_ALL_EVENTS);
 return(obd);

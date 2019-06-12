@@ -1,7 +1,7 @@
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
-//#include <glib.h>
+#include <glib.h>  // g_strdup
 //#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <stdint.h>

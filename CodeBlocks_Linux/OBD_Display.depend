@@ -373,10 +373,13 @@
 	<stdint.h>
 	"can_drv.h"
 
-1513357481 /opt/tiny_can/dev/lib/can_drv.h
+1548539563 /opt/tiny_can/dev/lib/can_drv.h
 	"can_drv_config.h"
 	"can_types.h"
 	<windows.h>
+	<time.h>
+	<unistd.h>
+	<pthread.h>
 	"can_drv_ex.h"
 
 1447551541 /opt/tiny_can/dev/lib/can_drv_config.h
@@ -386,7 +389,7 @@
 	<stdint.h>
 	<stdint.h>
 
-1548536998 /opt/tiny_can/dev/lib/can_drv_ex.h
+1548540410 /opt/tiny_can/dev/lib/can_drv_ex.h
 
 1548537134 /data/tiny_can/OBD-Display/src/can_device.h
 	"can_drv.h"
@@ -1544,7 +1547,7 @@
 1501681736 /usr/include/gtk-2.0/gdk/gdkrgb.h
 	<gdk/gdktypes.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf.h
 	<glib.h>
 	<gdk-pixbuf/gdk-pixbuf-features.h>
 	<glib-object.h>
@@ -1557,43 +1560,43 @@
 	<gdk-pixbuf/gdk-pixbuf-enum-types.h>
 	<gdk-pixbuf/gdk-pixbuf-autocleanups.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-features.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-features.h
 	<glib.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-core.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-core.h
 	<glib.h>
 	<glib-object.h>
 	<gio/gio.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-transform.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-transform.h
 	<glib.h>
 	<gdk-pixbuf/gdk-pixbuf-core.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-animation.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-animation.h
 	<glib-object.h>
 	<gdk-pixbuf/gdk-pixbuf-core.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-simple-anim.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-simple-anim.h
 	<gdk-pixbuf/gdk-pixbuf-animation.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-io.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-io.h
 	<stdio.h>
 	<glib.h>
 	<gmodule.h>
 	<gdk-pixbuf/gdk-pixbuf-core.h>
 	<gdk-pixbuf/gdk-pixbuf-animation.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-loader.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-loader.h
 	<glib.h>
 	<glib-object.h>
 	<gdk-pixbuf/gdk-pixbuf-core.h>
 	<gdk-pixbuf/gdk-pixbuf-animation.h>
 	<gdk-pixbuf/gdk-pixbuf-io.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-enum-types.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-enum-types.h
 	<glib-object.h>
 
-1531490455 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-autocleanups.h
+1553101913 /usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-autocleanups.h
 
 1445636048 /usr/include/pango-1.0/pango/pangocairo.h
 	<pango/pango.h>
@@ -2678,7 +2681,8 @@
 	"mhs_g_event.h"
 	"cbuf.h"
 
-1550009423 /data/tiny_can/OBD-Display/src/lib/util.h
+1556146672 /data/tiny_can/OBD-Display/src/lib/util.h
+	<glib.h>
 	<stdlib.h>
 	<stdint.h>
 	<windows.h>
@@ -2895,7 +2899,7 @@
 
 1437594673 /data/tiny_can/OBD-Display/src/lib/gtk-lcd.h
 
-1549844679 source:/data/tiny_can/OBD-Display/src/lib/gtk_util.c
+1556470484 source:/data/tiny_can/OBD-Display/src/lib/gtk_util.c
 	<string.h>
 	<ctype.h>
 	<gtk/gtk.h>
@@ -2931,22 +2935,23 @@
 	<glib.h>
 	"util.h"
 
-1548543120 source:/data/tiny_can/OBD-Display/src/lib/mhs_queue.c
+1556319680 source:/data/tiny_can/OBD-Display/src/lib/mhs_queue.c
 	<string.h>
 	<pthread.h>
 	"util.h"
 	"mhs_queue.h"
 
-1548543121 /data/tiny_can/OBD-Display/src/lib/mhs_queue.h
+1556319680 /data/tiny_can/OBD-Display/src/lib/mhs_queue.h
 	"util.h"
 
 1548633551 source:/data/tiny_can/OBD-Display/src/lib/mhs_g_event.c
 	<glib.h>
 	"mhs_g_event.h"
 
-1550260551 source:/data/tiny_can/OBD-Display/src/can_autobaud.c
+1556319952 source:/data/tiny_can/OBD-Display/src/can_autobaud.c
 	<glib.h>
 	<gtk/gtk.h>
+	<string.h>
 	"can_drv.h"
 	"can_device.h"
 	"util.h"
@@ -2960,7 +2965,7 @@
 
 1549921630 /data/tiny_can/OBD-Display/src/mhs_msg_types.h
 
-1549140942 /data/tiny_can/OBD-Display/src/can_autobaud.h
+1556151201 /data/tiny_can/OBD-Display/src/can_autobaud.h
 	<glib.h>
 	"can_device.h"
 	"mhs_g_messages.h"
@@ -3016,14 +3021,14 @@
 	<libxml/tree.h>
 	"xmlbase.h"
 
-1549315657 source:/data/tiny_can/OBD-Display/src/obd/can_device.c
+1556654333 source:/data/tiny_can/OBD-Display/src/obd/can_device.c
 	<glib.h>
 	"util.h"
 	"mhs_thread.h"
 	"can_drv.h"
 	"can_device.h"
 
-1550262878 source:/data/tiny_can/OBD-Display/src/main.c
+1556482253 source:/data/tiny_can/OBD-Display/src/main.c
 	<glib.h>
 	<glib/gstdio.h>
 	<gtk/gtk.h>
@@ -3066,7 +3071,7 @@
 	<gtk/gtk.h>
 	"main.h"
 
-1549151122 source:/data/tiny_can/OBD-Display/src/obd/isotp.c
+1556319680 source:/data/tiny_can/OBD-Display/src/obd/isotp.c
 	<string.h>
 	"util.h"
 	"mhs_thread.h"
@@ -3080,7 +3085,7 @@
 	"mhs_queue.h"
 	"can_device.h"
 
-1550104270 source:/data/tiny_can/OBD-Display/src/obd/obd2.c
+1556486269 source:/data/tiny_can/OBD-Display/src/obd/obd2.c
 	<string.h>
 	"util.h"
 	"obd_types.h"
@@ -3096,13 +3101,13 @@
 1548545430 /data/tiny_can/OBD-Display/src/obd/obd_db.h
 	"obd_types.h"
 
-1549734426 /data/tiny_can/OBD-Display/src/obd/obd2.h
+1556144657 /data/tiny_can/OBD-Display/src/obd/obd2.h
 	"obd_types.h"
 	"obd_pids.h"
 
 1549841894 /data/tiny_can/OBD-Display/src/obd/obd_pids.h
 
-1550407182 source:/data/tiny_can/OBD-Display/src/obd/obd_db.c
+1554484842 source:/data/tiny_can/OBD-Display/src/obd/obd_db.c
 	<string.h>
 	"obd_db.h"
 	"obd_decode.c"
@@ -3130,7 +3135,7 @@
 	"mhs_g_messages.h"
 	"mhs_msg_types.h"
 
-1550008539 source:/data/tiny_can/OBD-Display/src/start_win.c
+1556633550 source:/data/tiny_can/OBD-Display/src/start_win.c
 	<glib.h>
 	<gtk/gtk.h>
 	<gdk/gdk.h>
@@ -3155,7 +3160,7 @@
 	"etable.h"
 	"trace.h"
 
-1550407097 source:/data/tiny_can/OBD-Display/src/obd2_pid_sel.c
+1556297788 source:/data/tiny_can/OBD-Display/src/obd2_pid_sel.c
 	<glib.h>
 	<gtk/gtk.h>
 	"util.h"

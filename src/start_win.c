@@ -68,6 +68,11 @@ static const gchar *DeviceInfoTableStr[] = {
 
 const GdkColor BgColor = { 0, 0, 0, 0.5 };
 
+static const struct TCanMsg AutobaudTxMsg = {
+  .Id = OBD2_TX_ID,
+  .MsgFlags = 8,
+  .MsgData = {0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+  .Time = {0, 0}};
 
 
 static void CanDriverInfoFree(struct TCanDriverInfo *driver_info)
@@ -191,6 +196,8 @@ struct TStartWin *start_win;
 guint sub_msg;
 
 start_win = (struct TStartWin *)user_data;
+if (!start_win->MainWin)
+  return;
 err = 0;
 // ******* Tiny-CAN Status ********
 if (msg->MessageType == MHS_MSG_PNP_EVENT)
@@ -222,8 +229,8 @@ if (msg->MessageType == MHS_MSG_PNP_EVENT)
       {
       UpdateMsgWidget(start_win->HardwareWdg, MSG_WDG_STATUS_OK, "<span size=\"x-large\">Tiny-CAN Status</span>\n"
                                                "<b>Verbindung zum Tiny-CAN hergestellt</b>");
-      widget = CreateDeviceInfoTable(start_win->CanAutobaud->CanDevice);
-      MsgWidgetAddCustomWidget(start_win->HardwareWdg, widget);
+      if ((widget = CreateDeviceInfoTable(start_win->CanAutobaud->CanDevice)))
+        MsgWidgetAddCustomWidget(start_win->HardwareWdg, widget);
       }
     }
 
@@ -246,7 +253,7 @@ if (msg->MessageType == MHS_MSG_PNP_EVENT)
                                              "<b>Warte auf Baudraten erkennung</b>");
     }
 
-  UpdateGtk();
+  //UpdateGtk(); <*> raus
   if (err)
     {
     Obd2Stop(start_win->MainWin->Obd2);
@@ -410,8 +417,8 @@ start_win->BaseWdg = box;
 if (!err)
   {
   MainScheduler = mhs_g_message_scheduler_create(SchedulerMsgsCB, (gpointer)start_win, TRUE);
-  start_win->CanAutobaud = CreateCanAutobaud(MainScheduler, main_win->CanDevice, AUTOBAUD_CLOSE_ON_FINISH);
-  SetupAutobaud(start_win->CanAutobaud, AUTOBAUD_250K_EN | AUTOBAUD_500K_EN);
+  start_win->CanAutobaud = CreateCanAutobaud(MainScheduler, main_win->CanDevice, 0);
+  SetupAutobaud(start_win->CanAutobaud, AUTOBAUD_250K_EN | AUTOBAUD_500K_EN, &AutobaudTxMsg, AUTOBAUD_NO_SILENT_MODE | AUTOBAUD_AKTIV_SCAN);
   }
 gtk_widget_show_all(scrolledwindow);
 return(scrolledwindow);

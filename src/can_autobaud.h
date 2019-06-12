@@ -27,7 +27,10 @@
 #define AUTOBAUD_FRAMES_EXT   2
 #define AUTOBAUD_FRAMES_MIXED 3
 
-#define AUTOBAUD_CLOSE_ON_FINISH  0x0001
+
+//#define AUTOBAUD_CLOSE_ON_FINISH  0x0001
+#define AUTOBAUD_NO_SILENT_MODE     0x0002
+#define AUTOBAUD_AKTIV_SCAN         0x0004
 
 
 struct TCanAutobaud
@@ -35,6 +38,7 @@ struct TCanAutobaud
   struct TCanDevice *CanDevice;
   uint32_t Flags;
   uint32_t EnableSpeeds;
+  struct TCanMsg TxMsg;
   
   uint16_t CanSpeed;
   uint8_t FrameFormatType;
@@ -51,7 +55,7 @@ struct TCanAutobaud
 
 struct TCanAutobaud *CreateCanAutobaud(TMhsGScheduler *scheduler, struct TCanDevice *can_device, uint32_t flags);
 void DestroyCanAutobaud(struct TCanAutobaud **autobaud_ref);
-void SetupAutobaud(struct TCanAutobaud *autobaud, uint32_t enable_speeds);
+void SetupAutobaud(struct TCanAutobaud *autobaud, uint32_t enable_speeds, const struct TCanMsg *tx_msg, uint32_t flags);
 void StartCanAutobaud(struct TCanAutobaud *autobaud, uint16_t start_can_speed);
 void StopCanAutobaud(struct TCanAutobaud *autobaud);
 

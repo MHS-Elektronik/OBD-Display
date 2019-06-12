@@ -36,7 +36,7 @@ enum
 struct TPidSelWin
   {
   GtkWidget *PidListView;
-  GtkWidget *PidEnableToggleWdg;
+  gpointer PidEnableToggleWdg;
   gulong PidEnableToggleCbId;
   TObd2 *Obd;
   };
@@ -191,7 +191,6 @@ for (idx = 0; idx < obd->CurrentDataSize; idx++)
       aktiv = TRUE;
     else
       aktiv = FALSE;
-    //aktiv = FALSE;
     }
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter,

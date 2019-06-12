@@ -80,8 +80,10 @@ for (i = 0; (desc = (gchar *)description_list[i]); i++)
   label_str = NULL;
   if (get_value_func)
     {
-    str =(get_value_func)(i, get_value_func_data);
-    label_str = g_markup_printf_escaped("<span foreground=\"red\"><big>%s</big></span>", str);
+    if ((str = (get_value_func)(i, get_value_func_data)))
+      label_str = g_markup_printf_escaped("<span foreground=\"red\"><big>%s</big></span>", str);
+    else
+      label_str = g_markup_printf_escaped("<span foreground=\"red\"><big>---</big></span>");
     }
   widget = gtk_label_new(label_str);
   info_table->ValueLabels[i] = widget;
@@ -117,8 +119,10 @@ for (i = 0; (gchar *)info_table->DescriptionList[i]; i++)
   // **** Value Label erzeugen
   if (get_value_func)
     {
-    str =(get_value_func)(i, get_value_func_data);
-    label_str = g_markup_printf_escaped("<span foreground=\"red\"><big>%s</big></span>", str);
+    if ((str = (get_value_func)(i, get_value_func_data)))
+      label_str = g_markup_printf_escaped("<span foreground=\"red\"><big>%s</big></span>", str);
+    else
+      label_str = g_markup_printf_escaped("<span foreground=\"red\"><big>---</big></span>");
     label_wdg = info_table->ValueLabels[i];
     gtk_label_set_markup(GTK_LABEL(label_wdg), label_str);
     safe_free(str);

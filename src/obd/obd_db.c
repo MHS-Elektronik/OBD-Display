@@ -142,7 +142,7 @@ Mode Bit
 
 const TOBD2Cmd OBD2Db[] = {                                                                                                      // Scale 0 disables Scale/Offset function
 // *************************************** M O D E 1 *******************************************
-//  Name                                                              | Formatm String       | Mode | PID | Response Type    |Flags|Length| Scale | Offset
+//  Name                                                              | Format String        | Mode | PID | Response Type    |Flags|Length| Scale | Offset
   {"Supported PIDs in the range 01 - 20",                             &ShowRaw32Hex,           {0x01, 0x00}, OBD2TypeBitfield, 0xB0, 6, 1.0f,            0.0f, &OBD2DecU32Raw},
   {"Monitor status since DTCs cleared",                               &ShowRaw32Hex,           {0x01, 0x01}, OBD2TypeBitfield, 0x30, 6, 1.0f,            0.0f, &OBD2DecU32Raw},
   {"Freeze DTC",                                                      &ShowRaw16Hex,           {0x01, 0x02}, OBD2TypeOther,    0x00, 4, 1.0f,            0.0f, &OBD2DecNop}, // <*> Decoder ?

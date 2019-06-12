@@ -59,6 +59,8 @@ TMhsQueue *mhs_queue_create(uint32_t mem_limit, uint8_t async, TMhsQueueCB proc,
 void mhs_queue_destroy(TMhsQueue **queue);
 int mhs_queue_push(TMhsQueue *queue, const void *data, uint32_t size);
 void *mhs_queue_pop(TMhsQueue *queue);
+void mhs_queue_clear(TMhsQueue *queue);
+
 void mhs_queue_data_free(void *data);
 uint32_t mhs_queue_get_data_size(void *data);
 

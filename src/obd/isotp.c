@@ -30,22 +30,26 @@ struct TCanMsg msg;
 // **** Message Format
 msg.Flags.Long = 0L;  // RTR = 0, EFF = 0
 if (tp->Flags & CAN_ISOTP_29BIT_ID)
+  {
   msg.Flags.Flag.EFF = 1;
-msg.Id = tp->TxId;
+  msg.Id = ((tp->RxId & 0x000000FF ) << 8) | 0x18DA00F1;
+	}
+else 
+	msg.Id = tp->RxId - 8;
 
 idx = 0;
-if (tp->Flags & CAN_ISOTP_TX_PADDING)
+/*if (tp->Flags & CAN_ISOTP_TX_PADDING) <*> ?
   {
   memset(&msg.MsgData[0], tp->TxPadContent, 8);
   msg.MsgLen = 8;
   }
 else
-  {
+  { */
   if (tp->Flags & CAN_ISOTP_EXTEND_ADDR)
     msg.MsgLen = 4;
   else
     msg.MsgLen = 3;
-  }
+  //} 
 if (tp->Flags & CAN_ISOTP_EXTEND_ADDR)
   msg.MsgData[idx++] = tp->ExtAddress;
 msg.MsgData[idx++] = N_PCI_FC | flowstatus;
@@ -314,12 +318,12 @@ if (tp->Flags & CAN_ISOTP_EXTEND_ADDR)
   space--;
   }
 msg.MsgData[idx++] = N_PCI_SF | d_len;
+space -= d_len;
 for (p = tp->Tx.Buf; d_len; d_len--)
   msg.MsgData[idx++] = *p++;
 // Padding
 if (tp->Flags & CAN_ISOTP_TX_PADDING)
   {
-  space -= d_len;
   for (; space; space--)
     msg.MsgData[idx++] = tp->TxPadContent;
   }
@@ -415,12 +419,12 @@ msg.MsgData[idx++] = N_PCI_CF | tp->Tx.PktIdx;
 tp->Tx.PktIdx = (tp->Tx.PktIdx + 1) & 0x0F;
 // Daten
 tp->Tx.Count += d_len;
+space -= d_len;
 for (; d_len; d_len--)
   msg.MsgData[idx++] = *tp->Tx.Ptr++;
 // Padding
 if (tp->Flags & CAN_ISOTP_TX_PADDING)
   {
-  space -= d_len;
   for (; space; space--)
     msg.MsgData[idx++] = tp->TxPadContent;
   }
@@ -514,7 +518,7 @@ mhs_event_set_event_mask(tp->Event, MHS_ALL_EVENTS);
 CanDevRxEventConnect(can_device, IsotpRxDataHandler, tp);
 
 if (!(tp->Thread = mhs_create_thread(TxThreadExecute, tp, MHS_THREAD_PRIORITY_NORMAL, 0)))
-  err = -1;                                                                 
+  err = -1;
 else
   {
   mhs_event_set_event_mask((TMhsEvent *)tp->Thread, MHS_ALL_EVENTS);
@@ -624,7 +628,10 @@ uint8_t *rx;
 
 if ((!tp) || (!rx_data) || (!rx_size))
   return(-1);
+*rx_size = 0;
+*rx_data = NULL;
 mhs_event_clear(tp->Event, 0xFF); // <*> nur zur Sicherheit
+mhs_queue_clear(tp->RxQueue);
 if ((err = IsotpSend(tp, tx_data, tx_size)))
   return(err);
 events = mhs_wait_for_event(tp->Event, timeout);

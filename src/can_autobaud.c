@@ -2,6 +2,7 @@
                         can_autobaud.c  -  description
                              -------------------
     begin             : 27.01.2019
+    last modify       : 24.04.2019
     copyright         : (C) 2019 by MHS-Elektronik GmbH & Co. KG, Germany
                                http://www.mhs-elektronik.de
     autho             : Klaus Demlehner, klaus@mhs-elektronik.de
@@ -16,12 +17,25 @@
  ***************************************************************************/
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <string.h>
 #include "can_drv.h"
 #include "can_device.h"
 #include "util.h"
 #include "mhs_g_messages.h"
 #include "mhs_msg_types.h"
 #include "can_autobaud.h"
+
+
+#ifndef TestWaitTime
+  #define TestWaitTime 3000  // Wartezeit auf CAN Nachrichten in ms
+#endif
+#ifndef ERROR_CNT_LIMIT
+  #define ERROR_CNT_LIMIT 5
+#endif
+#ifndef HIT_CNT_LIMIT
+  #define HIT_CNT_LIMIT   2
+#endif
+
 
 #define INDEX_AUTOBAUD_FIFO 0x80000001 // <*> verschieben
 
@@ -31,10 +45,6 @@ struct TCanSpeedsTab
   const gchar *CanSpeedStr;
   };
 
-
-#define TestWaitTime 3000  // Wartezeit auf CAN Nachrichten in ms
-#define ERROR_CNT_LIMIT 10
-#define HIT_CNT_LIMIT   10
 
 #define UsedCanSpeedsTabSize 9
 // Tabelle mit CAN Übertragungsgeschwindigkeiten
@@ -69,6 +79,7 @@ autobaud->CanDevice = can_device;
 autobaud->Flags = flags;
 autobaud->EnableSpeeds = AUTOBAUD_ALL_EN;
 (void)CanExSetAsUByte(can_device->DeviceIndex, "CanErrorMsgsEnable", 1);
+//(void)CanExSetAsUByte(can_device->DeviceIndex, "CanTxAckEnable", 1); <*>
 // Empfangs FIFO  erzeugen
 (void)CanExCreateFifo(INDEX_AUTOBAUD_FIFO, 1000, NULL, 0, 0xFFFFFFFF);
 autobaud->Event = CanExCreateEvent();   // Event Objekt erstellen
@@ -92,12 +103,17 @@ g_free(autobaud);
 }
 
 
-void SetupAutobaud(struct TCanAutobaud *autobaud, uint32_t enable_speeds)
+void SetupAutobaud(struct TCanAutobaud *autobaud, uint32_t enable_speeds, const struct TCanMsg *tx_msg, uint32_t flags)
 {
 if (!autobaud)
   return;
 autobaud->EnableSpeeds = enable_speeds;
 autobaud->CanSpeedsCount = CountBits(enable_speeds);
+if (tx_msg)
+  memcpy(&autobaud->TxMsg, tx_msg, sizeof(struct TCanMsg));
+autobaud->Flags = flags;
+if (flags & AUTOBAUD_AKTIV_SCAN)
+  autobaud->Flags |= AUTOBAUD_NO_SILENT_MODE;
 }
 
 
@@ -236,7 +252,7 @@ struct TCanMsg *msg;
 TMhsGMessage *g_msg;
 struct TDeviceStatus status;
 uint32_t event;
-int32_t size, hit_cnt, eff_cnt, std_cnt, error_cnt, first, setup, ok;
+int32_t size, hit_cnt, eff_cnt, std_cnt, error_cnt, first, setup, ok, tx_msg;
 gchar *str;
 
 if (!(autobaud = (struct TCanAutobaud *)data))
@@ -245,6 +261,7 @@ can_device = autobaud->CanDevice;
 first = 1;
 setup = 1;
 ok = 0;
+tx_msg = 0;
 str = NULL;
 if (!(speed_tab_item = AutobaudFirstSpeed(autobaud)))
   return(NULL);
@@ -259,7 +276,10 @@ do
     if (first)
       {
       first = 0;
-      CanSetMode(can_device->DeviceIndex, OP_CAN_START_LOM, CAN_CMD_ALL_CLEAR);
+      if (autobaud->Flags & AUTOBAUD_NO_SILENT_MODE)
+        CanSetMode(can_device->DeviceIndex, OP_CAN_START, CAN_CMD_ALL_CLEAR);
+      else
+        CanSetMode(can_device->DeviceIndex, OP_CAN_START_LOM, CAN_CMD_ALL_CLEAR);
       }
     else
       CanSetMode(can_device->DeviceIndex, OP_CAN_NO_CHANGE, CAN_CMD_ALL_CLEAR);
@@ -269,6 +289,12 @@ do
     std_cnt = 0;
     error_cnt = 0;
     autobaud->FrameFormatType = 0;
+    if (autobaud->Flags & AUTOBAUD_AKTIV_SCAN)
+      {
+      CanTransmitClear(can_device->DeviceIndex);
+      (void)CanTransmit(can_device->DeviceIndex, &autobaud->TxMsg, 1);
+      mhs_sleep(150);
+      }
     if (autobaud->CanSpeedsCount == 1)
       {
       str = g_strdup_printf("Baudrate %s testen, warte auf CAN Nachrichten ...",
@@ -308,11 +334,17 @@ do
     }
   else if (event & RX_EVENT)     // CAN Rx Event
     {
+    tx_msg = 0;
     while ((size = CanReceive(INDEX_AUTOBAUD_FIFO, autobaud->RxTempBuffer, AUTOBAUD_TEMP_BUFFER_SIZE)) > 0)
       {
       for (msg = autobaud->RxTempBuffer; size; size--)
         {
-        if (msg->MsgErr)
+        if (msg->MsgTxD)
+          {
+          //if (autobaud->Flags & AUTOBAUD_AKTIV_SCAN) <*>
+
+          }
+        else if (msg->MsgErr)
           error_cnt++;
         else
           {
@@ -320,6 +352,7 @@ do
             eff_cnt++;
           else
             std_cnt++;
+          tx_msg = 1;
           hit_cnt++;
           }
         msg++;
@@ -359,6 +392,15 @@ do
       }
     else
       {
+      if (tx_msg)
+        {
+        if (autobaud->Flags & AUTOBAUD_AKTIV_SCAN)
+          {
+          (void)CanTransmit(can_device->DeviceIndex, &autobaud->TxMsg, 1);
+          mhs_sleep(150);
+          }
+        tx_msg = 0;
+        }
       // <*> noch ändern nur das Tiny-CAN IV-XL kann Busfehler erkennen
       if (autobaud->CanSpeedsCount == 1)
         {
@@ -379,11 +421,7 @@ do
     setup = 1;
 
   if (setup)
-    {
     speed_tab_item = AutobaudNextSpeed(autobaud);
-    /*if (++autobaud->AktivTabIndex >= UsedCanSpeedsTabSize)
-      autobaud->AktivTabIndex = 0;*/
-    }
   }
 while (1);
 //if (autobaud->Flags & AUTOBAUD_CLOSE_ON_FINISH)

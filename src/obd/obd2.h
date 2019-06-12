@@ -8,6 +8,9 @@
   extern "C" {
 #endif
 
+#define OBD2_TX_ID 0x7DF
+#define OBD2_RX_ID 0x7E8
+
 #define OBD2_ERR_PID_NOT_FOUND      -4
 #define OBD2_ERR_PID_NOT_SUPPORTED  -3
 #define OBD2_ERR_PID_DISABLED       -2

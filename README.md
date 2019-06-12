@@ -1,19 +1,21 @@
-# OBD-II Display für Rasperry PI/Linux und Tiny-CAN
+# OBD-II Display for Rasperry PI/Linux and Tiny-CAN
 
 [![OBD-Display](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_display.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_Display.jpg)
 
-# Funktionsumfang
+# [This text in German](https://github.com/MHS-Elektronik/OBD-Display/blob/master/README_DE.md "Diesen Text auf Deutsch anzeigen")
 
-* Abfrage von Messdaten (SID 0x01)
-  * Konfigurierbare Anzeige der PID Werte von 0x00 bis 0x4E
-* Abfrage Fahrzeuginformationen (SID 0x09)
-  * Aufschlüsselung der Fahrgestellnummer (VIN - Vehicle Identification Number) in Hersteller, Land, Modelljahr, Seriennummer, ...)
-* Fehlercodes lesen (DTC Diagnostic Trouble Codes) (SID 0x03)
-  * Klartext anzeige der Fehlercodes mittels Datenbank
-* CAN Rohdaten anzeigen (CAN-Trace)
-* Automatische Erkennung der CAN Hardware und Baudrate
+# Funcional scope
 
-# Screenshots 
+* Query of measurement data (SID 0x01)
+  * Configurable display of the PID values from 0x00 to 0x4E
+* Query of vehicle information (SID 0x09)
+  * Breakdown of the Vehicle Identification Number (VIN) by manufacturer, country, model year, serial number, ...)
+* Read the error codes (DTC Diagnostic Trouble Codes) (SID 0x03)
+  * Plain text Display of error codes via databank
+* Display CAN raw data (CAN-Trace)
+*Automatic recognition of CAN hardware and baud rate
+
+# Screenshots
 
 [![OBD-Display](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_start.png)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_start.png)
 
@@ -25,109 +27,119 @@
 
 
 # Hardware
-* Linux PC z.B. Rasberry PI
-* Tiny-CAN z.B. Tiny-CAN I-XL, Bezugsquelle: http://www.mhs-elektronik.de
-* OBD-CAN Kabel
+* Linux PC i.e. Rasberry PI
+* Tiny-CAN i.e. Tiny-CAN I-XL, Source of supply: http://www.mhs-elektronik.de
+* OBD-CAN cable
 
 [![OBD-Display](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd2_cable.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd2_cable.jpg)
 
 # Installation
 
-Zuerst muss das Tiny-CAN Softwarepaket installiert werden, für den Betrieb der Software wird nur die "libmhstcan.so" benötigt. "OBD-Display" sucht diese Datei im Verzeichnis "/opt/tiny_can/can_api". 
+First the Tiny-CAN software package must be installed. For the operation of the software only the "libmhstcan.so" is required. "OBD-Display" searches for this file in the directory "/opt/tiny_can/can_api". 
 
-Die Datei "tiny_can_raspberry_XXX.tar.gz" von "http://www.mhs-elektronik.de" downloaden und im Verzeichnis "/opt" entpacken. XXX durch die aktuellste Version ersetzen. Nach dem entpacken kann das Archiv gelöscht werden. Zuvor müssen noch die Zugriffsrechte für das "/opt" Verzeichnis gesetzt werden.
-
+Download the file "tiny_can_raspberry_XXX.tar.gz" from "http://www.mhs-elektronik.de" and unpack it in the directory "/opt". Replace XXX with the latest version. The archive can be deleted after it has been unpacked. The access rights for the "/opt" directory must first be set, here are the individual steps:
+    $ sudo chgrp pi /opt
     $ sudo chmod -R 775 /opt
     $ cd /opt
     $ mv /home/pi/tiny_can_raspberry_XXX.tar.gz .
     $ tar -xzvf  tiny_can_raspberry_XXX.tar.gz
     $ rm tiny_can_rasberry_XXX.tar.gz
 
-Die Tiny-CAN API kompilieren: 
+Compile the Tiny-CAN API: 
     $ cd /opt/tiny_can/can_api/src/mhstcan/linux
     $ make
     $ mv libmhstcan.so ../../..
-Die Lib ist dem Paket bereits enthalten, in der Regel ist das kompilieren nicht notwendig.
+The Lib is already included in the package, usually compiling is not necessary.
 
-"Git" installieren:
+Install "git":
     $ sudo apt-get install git
 
-"ObdDisplay" von "Git-Server" holen:
+Get "ObdDisplay" from "github":
     $ cd /opt
-    $ git clone http://github.com/MHS-Elektronik/OBD-Display.git
+    $ git clone https://github.com/MHS-Elektronik/OBD-Display.git
 
-Development Pakete installieren:
+Install development packages:
     $ sudo apt-get install gtk2.0-dev
 
-"ObdDisplay" kompilieren:
+Compile "ObdDisplay":
     $ cd /opt/OBD-Display/linux
     $ make
 
-ObdDisplay starten:
+Start "ObdDisplay":
     $ cd /opt/OBD-Display/linux/bin
     $ ./ObdDisplay
 
-# Quellen/Links
-Zwei der Kerndateien, „obd_db.c“ und „obd_decode.c“ in diesem Projekt basieren auf der OBD-II API von Ethan Vaughan, https://github.com/ejvaughan/obdii
 
-Beim ISO-TP Treiber habe ich ein wenig aus dem ISP-TP Linux Kernel Treiber von Oliver Hartkopp gespickt, https://github.com/hartkopp/can-isotp
+# Sources/Links
+Two of the core files, "obd_db.c" and "obd_decode.c" in this project are based on the OBD-II API from Ethan Vaughan, https://github.com/ejvaughan/obdii
 
-Die meisten Informationen habe ich diesen Dokument von emotive entnommen:
+With the ISO-TP driver I copied a bit from the ISP-TP Linux Kernel driver from Oliver Hartkopp, https://github.com/hartkopp/can-isotp
+
+Most of the information I have taken from this document from emotive:
 http://www.emotive.de/documents/WebcastsProtected/Transport-Diagnoseprotokolle.pdf
-Wirklich sehr lesenswert, kann ich nur empfehlen!
+Really very worth reading, I can only recommend!
 
-Andere Quellen die ich benutzt habe:
-https://github.com/iotlabsltd/pyvin/tree/master/pyvin
-ftp://ftp.nhtsa.dot.gov/manufacture
-https://de.wikipedia.org/wiki/Fahrzeug-Identifizierungsnummer
-https://en.wikipedia.org/wiki/On-board_diagnostics
-https://de.wikipedia.org/wiki/ISO_15765-2
+Other sources I have used:  
+https://github.com/iotlabsltd/pyvin/tree/master/pyvin  
+ftp://ftp.nhtsa.dot.gov/manufacture  
+https://de.wikipedia.org/wiki/Fahrzeug-Identifizierungsnummer  
+https://en.wikipedia.org/wiki/On-board_diagnostics  
+https://de.wikipedia.org/wiki/ISO_15765-2  
 
  
+# Image Sources
+## Background graphic, VW Beetle:
+Source: https://commons.wikimedia.org/wiki/File:Der_Samtrote_Sonderkäfer.jpg
+Author: Marco Strohmeier
+Licence: Public Domain
 
-# Bildquellen
-## Hintergrundgrafik, VW Käfer:
-Quelle: https://commons.wikimedia.org/wiki/File:Der_Samtrote_Sonderkäfer.jpg
-Urheber: Marco Strohmeier
-Lizenz: Public Domain
+## OBD-connector:
+Source: https://commons.wikimedia.org/wiki/File:OBD2-Buchse-Stecker-Belegung.jpg
+Author: https://de.wikipedia.org/wiki/Benutzer:Losch
+Licence: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
 
-## OBD-Stecker:
-Quelle: https://commons.wikimedia.org/wiki/File:OBD2-Buchse-Stecker-Belegung.jpg
-Urheber: https://de.wikipedia.org/wiki/Benutzer:Losch
-Lizenz: CC BY-SA 4.0  https://creativecommons.org/licenses/by-sa/4.0
+The image files were adapted for my purposes.
 
-Die Bilddateien wurden für meine Zwecke angepasst.
+# Tips and Tricks
+## Start the program automatically
+If no mouse or keyboard is connected to the PI, it is useful to start the program automatically. To do this, copy the file „ObdDisplay.desktop“ from the directory „tools“ to the directory „/etc/xdg/autostart“.
 
+    $ sudo cp /opt/ObdDisplay/tools/ObdDisplay.desktop /etc/xdg/autostart
 
-# Tipps und Tricks
-## Das Programm Automatisch starten
-Sollte keine Maus oder Tastatur an dem PI angeschlossen sein ist es sinnvoll das Programm automatisch zu starten. Kopieren Sie dazu die Datei "J1939Display.desktop" aus dem Verzeichnis "tools" ins Verzeichnis "/etc/xdg/autostart".
-
-    $ sudo cp /opt/J1939Display/tools/J1939Display.desktop /etc/xdg/autostart
-
-## Bildschirmschoner abschalten
-Die Datei "/etc/lightdm/lightdm.conf" im Editor als "admin" öffnen.
+## Turn off the screensaver
+Open the file "/etc/lightdm/lightdm.conf" in the editor as user "root".
 
     $ sudo leafpad /etc/lightdm/lightdm.conf
-In der Sektion "SeatDefaults" die Zeile "xserver-command" wie folgt abändern oder wenn nicht vorhanden ergänzen.
+    
+In the section "SeatDefaults" modify the line "xserver-command" as follows or add if not exist.
 
     [SeatDefaults]
     ....
     xserver-command=X -s 0 -dpms
     ....
 
-## Bildschirm-Anzeige drehen
-Die Datei "/boot/config.txt" im Editor als "admin" öffnen.
-
+## Rotate the screen display
+Open the file "/boot/config.txt" in the editor as user "root".
     $ sudo leafpad /boot/config.txt
-In die Datei folgende Zeile eintragen
+Enter the following line into the file
     lcd_rotate=2
-Nach dem Neustart sollte das Bild um 180° gedreht sein und Du kannst das Display umdrehen, womit sich der microUSB Stecker oben befindet.
+After reboot the image should be rotated 180° and you can turn the display upside down so that the microUSB connector is at the top. 
 
-## Maus-Zeiger verschwinden lassen
-Für unsere spezielle Anwendung ist der Mauszeiger störend. Um den Cursor ganz einfach zu entfernen, können wir ein Paket installieren, welches ihn ausblendet:
+## Make the mouse pointer disappear
+For our special application, the mouse pointer is annoying. To remove the cursor very easily, we can install a package that hides it:
     $ sudo apt-get install unclutter
-Nach einem Neustart ist der Cursor nicht mehr sichtbar.
+After a reboot the cursor is invisible.
+
+
+# ToDos
+* Testing :-)
+* Web connection, suggest OpenXC, https://github.com/openxc
+* OBD-API: Customisation for SocketCAN, develop a SocketCAN Tiny-CAN API driver
+* OBD-API: Expand database („obd_db.c/obd_decode“), PIDs
+* OBD-API: Different polling intervals for the individual PIDs
+* OBD-API: Only query PIDs that are also shown
+* OBD-API: Documentation
+* GUI: Porting to GTK3
 
 
 

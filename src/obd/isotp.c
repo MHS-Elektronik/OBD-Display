@@ -33,23 +33,23 @@ if (tp->Flags & CAN_ISOTP_29BIT_ID)
   {
   msg.Flags.Flag.EFF = 1;
   msg.Id = ((tp->RxId & 0x000000FF ) << 8) | 0x18DA00F1;
-  }
+	}
 else 
-  msg.Id = tp->RxId - 8;
+	msg.Id = tp->RxId - 8;
 
 idx = 0;
-if (tp->Flags & CAN_ISOTP_TX_PADDING)
+/*if (tp->Flags & CAN_ISOTP_TX_PADDING) <*> ?
   {
   memset(&msg.MsgData[0], tp->TxPadContent, 8);
   msg.MsgLen = 8;
   }
 else
-  {
+  { */
   if (tp->Flags & CAN_ISOTP_EXTEND_ADDR)
     msg.MsgLen = 4;
   else
     msg.MsgLen = 3;
-  } 
+  //} 
 if (tp->Flags & CAN_ISOTP_EXTEND_ADDR)
   msg.MsgData[idx++] = tp->ExtAddress;
 msg.MsgData[idx++] = N_PCI_FC | flowstatus;

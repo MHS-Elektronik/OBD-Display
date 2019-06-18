@@ -38,6 +38,7 @@
 First the Tiny-CAN software package must be installed. For the operation of the software only the "libmhstcan.so" is required. "OBD-Display" searches for this file in the directory "/opt/tiny_can/can_api". 
 
 Download the file "tiny_can_raspberry_XXX.tar.gz" from "http://www.mhs-elektronik.de" and unpack it in the directory "/opt". Replace XXX with the latest version. The archive can be deleted after it has been unpacked. The access rights for the "/opt" directory must first be set, here are the individual steps:
+
     $ sudo chgrp pi /opt
     $ sudo chmod -R 775 /opt
     $ cd /opt
@@ -45,27 +46,34 @@ Download the file "tiny_can_raspberry_XXX.tar.gz" from "http://www.mhs-elektroni
     $ tar -xzvf  tiny_can_raspberry_XXX.tar.gz
     $ rm tiny_can_rasberry_XXX.tar.gz
 
-Compile the Tiny-CAN API: 
+Compile the Tiny-CAN API:
+ 
     $ cd /opt/tiny_can/can_api/src/mhstcan/linux
     $ make
     $ mv libmhstcan.so ../../..
+    
 The Lib is already included in the package, usually compiling is not necessary.
 
 Install "git":
+
     $ sudo apt-get install git
 
 Get "ObdDisplay" from "github":
+
     $ cd /opt
     $ git clone https://github.com/MHS-Elektronik/OBD-Display.git
 
 Install development packages:
+
     $ sudo apt-get install gtk2.0-dev
 
 Compile "ObdDisplay":
+
     $ cd /opt/OBD-Display/linux
     $ make
 
 Start "ObdDisplay":
+
     $ cd /opt/OBD-Display/linux/bin
     $ ./ObdDisplay
 
@@ -120,14 +128,20 @@ In the section "SeatDefaults" modify the line "xserver-command" as follows or ad
 
 ## Rotate the screen display
 Open the file "/boot/config.txt" in the editor as user "root".
+
     $ sudo leafpad /boot/config.txt
+    
 Enter the following line into the file
+
     lcd_rotate=2
+    
 After reboot the image should be rotated 180° and you can turn the display upside down so that the microUSB connector is at the top. 
 
 ## Make the mouse pointer disappear
 For our special application, the mouse pointer is annoying. To remove the cursor very easily, we can install a package that hides it:
+
     $ sudo apt-get install unclutter
+    
 After a reboot the cursor is invisible.
 
 

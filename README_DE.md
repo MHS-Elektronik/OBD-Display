@@ -36,6 +36,7 @@
 Zuerst muss das Tiny-CAN Softwarepaket installiert werden, für den Betrieb der Software wird nur die "libmhstcan.so" benötigt. "OBD-Display" sucht diese Datei im Verzeichnis "/opt/tiny_can/can_api". 
 
 Die Datei "tiny_can_raspberry_XXX.tar.gz" von "http://www.mhs-elektronik.de" downloaden und im Verzeichnis "/opt" entpacken. XXX durch die aktuellste Version ersetzen. Nach dem entpacken kann das Archiv gelöscht werden. Zuvor müssen noch die Zugriffsrechte für das "/opt" Verzeichnis gesetzt werden. Hier die einzelnen Schritte:
+
     $ sudo chgrp pi /opt
     $ sudo chmod -R 775 /opt
     $ cd /opt
@@ -43,27 +44,34 @@ Die Datei "tiny_can_raspberry_XXX.tar.gz" von "http://www.mhs-elektronik.de" dow
     $ tar -xzvf  tiny_can_raspberry_XXX.tar.gz
     $ rm tiny_can_rasberry_XXX.tar.gz
 
-Die Tiny-CAN API kompilieren: 
+Die Tiny-CAN API kompilieren:
+ 
     $ cd /opt/tiny_can/can_api/src/mhstcan/linux
     $ make
     $ mv libmhstcan.so ../../..
+    
 Die Lib ist in dem Paket bereits enthalten. In der Regel ist das kompilieren nicht notwendig.
 
 "Git" installieren:
+
     $ sudo apt-get install git
 
 "ObdDisplay" von "Git-Server" holen:
+
     $ cd /opt
     $ git clone https://github.com/MHS-Elektronik/OBD-Display.git
 
 Development Pakete installieren:
+
     $ sudo apt-get install gtk2.0-dev
 
 "ObdDisplay" kompilieren:
+
     $ cd /opt/OBD-Display/linux
     $ make
 
 ObdDisplay starten:
+
     $ cd /opt/OBD-Display/linux/bin
     $ ./ObdDisplay
 
@@ -120,13 +128,18 @@ In der Sektion "SeatDefaults" die Zeile "xserver-command" wie folgt abändern od
 Die Datei "/boot/config.txt" im Editor als User "root" öffnen.
 
     $ sudo leafpad /boot/config.txt
+    
 In die Datei folgende Zeile eintragen
+
     lcd_rotate=2
+    
 Nach dem Neustart sollte das Bild um 180° gedreht sein und Du kannst das Display umdrehen, womit sich der microUSB Stecker oben befindet.
 
 ## Maus-Zeiger verschwinden lassen
 Für unsere spezielle Anwendung ist der Mauszeiger störend. Um den Cursor ganz einfach zu entfernen, können wir ein Paket installieren, welches ihn ausblendet:
+
     $ sudo apt-get install unclutter
+    
 Nach einem Neustart ist der Cursor nicht mehr sichtbar.
 
 

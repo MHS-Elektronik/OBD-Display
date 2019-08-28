@@ -73,6 +73,10 @@ void cfg_write_float(ConfigFile * cfg, const gchar *section, const gchar *key, g
 void cfg_write_double(ConfigFile * cfg, const gchar *section, const gchar *key, gdouble value);
 void cfg_remove_key(ConfigFile * cfg, const gchar * section, const gchar * key);
 void cfg_clear_section(ConfigFile *cfg, const gchar *section);
+
+// new functions, add by MHS-Elektronik
+GList *cfg_open_section(ConfigFile *cfg, const gchar *name);
+gchar *cfg_read_section_key_value(GList **section, gchar **value);
 /* Prototypes */
 
 

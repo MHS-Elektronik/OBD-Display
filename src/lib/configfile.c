@@ -165,6 +165,7 @@ gboolean cfg_read_string(ConfigFile *cfg, const gchar *section, const gchar *key
 }
 
 
+
 /*!
  \brief cfg_read_int() reads an int value from the cfg
  \param cfg (ConfigFile*) source of the data
@@ -516,4 +517,33 @@ static ConfigLine *cfg_find_string(ConfigSection * section, const gchar * key)
 		list = g_list_next(list);
 	}
 	return NULL;
+}
+
+
+GList *cfg_open_section(ConfigFile *cfg, const gchar *name)
+{
+static ConfigSection *section;
+
+section = cfg_find_section(cfg, name);
+if (!section)
+  return(NULL);
+return(section->lines);
+}
+
+
+gchar *cfg_read_section_key_value(GList **section, gchar **value)
+{
+ConfigLine *line;
+GList *sec;
+gchar *key;
+
+if ((!value) || (!section))
+  return(NULL);
+if (!(sec = *section))
+  return(NULL);
+line = (ConfigLine *)sec->data;
+key = line->key;
+*value = g_strcompress(line->value);
+*section = g_list_next(sec);
+return(key);
 }

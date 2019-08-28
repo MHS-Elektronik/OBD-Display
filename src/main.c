@@ -37,6 +37,8 @@
 #include "obd2_dtc_win.h"
 #include "vin_info_win.h"
 #include "vin_db.h"
+#include "xml_database.h"
+#include "open_xc.h"
 #include "main.h"
 
 #define START_PAGE_INDEX           0
@@ -54,6 +56,7 @@ gchar *BaseDir;
 static guint64 AppStatusTimeStamp;
 static gint AppStatus = APP_INIT;
 static gint PrevPage = -1;
+static TOpenXc *OpenXc;
 
 
 static void MenuCB(GtkButton *button, gpointer user_data);
@@ -338,6 +341,7 @@ if (!page)
   }
 else
   {
+  XMLDatabaseUpdate(MainWin.Obd2);
   switch (page)
     {
     case START_PAGE_INDEX :
@@ -440,7 +444,6 @@ gchar *filename;
 gtk_init (&argc, &argv);
 
 PathsInit(argv[0]);
-(void)LoadConfigFile();
 /* Create the main window */
 win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
@@ -480,6 +483,7 @@ if ((MainWin.CanDevice = CanDevCreate(5000)))
       EventTimerId = g_timeout_add(300, (GtkFunction)EventTimerProc, (gpointer)&MainWin);
     }
   }
+(void)LoadConfigFile(MainWin.Obd2);  
 vbox = gtk_vbox_new(FALSE, 0);
 gtk_container_add(GTK_CONTAINER (win), vbox);
 
@@ -564,6 +568,9 @@ gtk_widget_show_all(MainWin.Main);
 
 GuiSetPage(START_PAGE_INDEX);
 
+(void)XMLDatabaseCreate();
+OpenXc = OpenXcCreate(MainWin.Obd2, NULL, 50001);
+
 SetupFullscreen();
 
 gtk_main();
@@ -576,6 +583,8 @@ IsotpDestroy(&MainWin.Isotp);
 CanDevDestroy(&MainWin.CanDevice);
 DtcDbFree(&MainWin.DtcDb);
 VinWmiDbFree();
+XMLDatabaseDestroy();
+OpenXcDestroy(&OpenXc);
 ConfigDestroy();
 safe_free(BaseDir);
 return 0;

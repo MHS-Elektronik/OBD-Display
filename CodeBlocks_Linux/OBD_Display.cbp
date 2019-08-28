@@ -33,6 +33,7 @@
 			<Add directory="../src/lib" />
 			<Add directory="../src/obd" />
 			<Add directory="../src/LinuxLib" />
+			<Add directory="../src/www" />
 		</Compiler>
 		<Linker>
 			<Add option="`pkg-config --libs gtk+-2.0 libxml-2.0`" />
@@ -48,13 +49,17 @@
 		<Unit filename="../../dev/lib/can_drv_config.h" />
 		<Unit filename="../../dev/lib/can_drv_ex.h" />
 		<Unit filename="../../dev/lib/can_types.h" />
-		<Unit filename="../../tiny_can/dev/lib/mhs_can_drv.c">
+		<Unit filename="../../dev/lib/mhs_can_drv.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/LinuxLib/mhs_event.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/LinuxLib/mhs_event.h" />
+		<Unit filename="../src/LinuxLib/mhs_file_event.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/LinuxLib/mhs_file_event.h" />
 		<Unit filename="../src/LinuxLib/mhs_thread.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -203,6 +208,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/vin_wdg.h" />
+		<Unit filename="../src/www/open_xc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/www/open_xc.h" />
+		<Unit filename="../src/www/sock_lib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/www/sock_lib.h" />
+		<Unit filename="../src/www/xml_database.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/www/xml_database.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -13,7 +13,10 @@
 * Read the error codes (DTC Diagnostic Trouble Codes) (SID 0x03)
   * Plain text Display of error codes via databank
 * Display CAN raw data (CAN-Trace)
-*Automatic recognition of CAN hardware and baud rate
+* Automatic recognition of CAN hardware and baud rate
+* HTML5 Web-Interface
+* Android: OpenXC (http://openxcplatform.com)
+
 
 # Screenshots
 
@@ -72,11 +75,41 @@ Compile "ObdDisplay":
     $ cd /opt/OBD-Display/linux
     $ make
 
+Set up web page:
+
+    $ cd /var/www
+    $ sudo chown -R pi html
+    $ sudo chgrp -R pi html
+    $ cd html
+    $ cp -R /opt/OBD-Display/www/* .
+
 Start "ObdDisplay":
 
     $ cd /opt/OBD-Display/linux/bin
     $ ./ObdDisplay
 
+# HTML5 Web-Interface
+
+[![OBD-Display HTML5 Interface](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_display_html5.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_display_html5.jpg)
+
+# OpenXC
+
+OpenXC is a hardware and software API for automobiles developed by Ford Bug Labs and proposed as an open standard. Homepage: http://openxcplatform.com and the sources at: https://github.com/openxc 
+OBD Display partly emulates the hardware of Ford and provides his data in "OpenXC JSON Message Format" per TCP/IP. The description of the data fomat can be found here: 
+https://github.com/openxc/openxc-message-format/blob/master/JSON.mkd
+
+# Install Android App "OpenXC Enabler"
+
+Downloads:
+The APK package for installation: https://github.com/openxc/openxc-android/releases
+OpenXC Enabler can also be installed via Google Play.
+The sources of the app: https://github.com/openxc/openxc-android
+
+Setup: adjust "Vehicle Interface" to "Network". Put "Network host address" on the address of the computer running OBD Display. "Network port" is fixed at 50001.
+[![OpenXC setup](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc_setup.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc_setup.jpg)
+
+Dashboard of the OpenXC Enabler App
+[![OpenXC Dashboard](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc.jpg)
 
 # Sources/Links
 Two of the core files, "obd_db.c" and "obd_decode.c" in this project are based on the OBD-II API from Ethan Vaughan, https://github.com/ejvaughan/obdii
@@ -110,7 +143,7 @@ The image files were adapted for my purposes.
 
 # Tips and Tricks
 ## Start the program automatically
-If no mouse or keyboard is connected to the PI, it is useful to start the program automatically. To do this, copy the file „ObdDisplay.desktop“ from the directory „tools“ to the directory „/etc/xdg/autostart“.
+If no mouse or keyboard is connected to the PI, it is useful to start the program automatically. To do this, copy the file "ObdDisplay.desktop" from the directory "tools" to the directory "/etc/xdg/autostart".
 
     $ sudo cp /opt/ObdDisplay/tools/ObdDisplay.desktop /etc/xdg/autostart
 
@@ -147,9 +180,8 @@ After a reboot the cursor is invisible.
 
 # ToDos
 * Testing :-)
-* Web connection, suggest OpenXC, https://github.com/openxc
 * OBD-API: Customisation for SocketCAN, develop a SocketCAN Tiny-CAN API driver
-* OBD-API: Expand database („obd_db.c/obd_decode“), PIDs
+* OBD-API: Expand database ("obd_db.c/obd_decode"), PIDs
 * OBD-API: Different polling intervals for the individual PIDs
 * OBD-API: Only query PIDs that are also shown
 * OBD-API: Documentation

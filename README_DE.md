@@ -12,6 +12,8 @@
   * Klartext anzeige der Fehlercodes mittels Datenbank
 * CAN Rohdaten anzeigen (CAN-Trace)
 * Automatische Erkennung der CAN Hardware und Baudrate
+* HTML5 Web-Interface
+* Android: OpenXC (http://openxcplatform.com)
 
 # Screenshots 
 
@@ -70,13 +72,44 @@ Development Pakete installieren:
     $ cd /opt/OBD-Display/linux
     $ make
 
+Web-Page einrichten:
+
+    $ cd /var/www
+    $ sudo chown -R pi html
+    $ sudo chgrp -R pi html
+    $ cd html
+    $ cp -R /opt/OBD-Display/www/* .
+
 ObdDisplay starten:
 
     $ cd /opt/OBD-Display/linux/bin
     $ ./ObdDisplay
 
+# HTML5 Web-Interface
+
+[![OBD-Display HTML5 Interface](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_display_html5.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/obd_display_html5.jpg)
+
+# OpenXC
+
+OpenXC ist eine offene Hard- und Software Platform für Automotiv Entwicklungen von "Ford Bug Labs", Homepage: http://openxcplatform.com und die Quellen auf: https://github.com/openxc 
+OBD Display emuliert zum Teil die Hardware von Ford und stellt seine Daten im "OpenXC JSON Message Format" per TCP/IP bereit. Die Beschreibung des Datenformates ist hier zu finden: 
+https://github.com/openxc/openxc-message-format/blob/master/JSON.mkd
+
+# Android App "OpenXC Enabler" installieren
+
+Downloads:
+Das APK Paket zur Installation: https://github.com/openxc/openxc-android/releases
+OpenXC Enabler kann auch über Google Play installiert werden.
+Die Quellen der App: https://github.com/openxc/openxc-android
+
+Setup: "Vehicle Interface" auf "Network" einstellen. "Network host address" auf die Adresse des Computers auf dem OBD Display ausgeführt wird setzen. "Network port" ist fest auf 50001 eingestellt.
+[![OpenXC Setup](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc_setup.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc_setup.jpg)
+
+Dashboard der OpenXC Enabler App
+[![OpenXC Dashboard](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc.jpg)](https://github.com/MHS-Elektronik/OBD-Display/blob/master/doku/open_xc.jpg)
+
 # Quellen/Links
-Zwei der Kerndateien, „obd_db.c“ und „obd_decode.c“ in diesem Projekt basieren auf der OBD-II API von Ethan Vaughan, https://github.com/ejvaughan/obdii
+Zwei der Kerndateien, "obd_db.c" und "obd_decode.c" in diesem Projekt basieren auf der OBD-II API von Ethan Vaughan, https://github.com/ejvaughan/obdii
 
 Beim ISO-TP Treiber habe ich ein wenig aus dem ISP-TP Linux Kernel Treiber von Oliver Hartkopp gespickt, https://github.com/hartkopp/can-isotp
 
@@ -141,6 +174,16 @@ Für unsere spezielle Anwendung ist der Mauszeiger störend. Um den Cursor ganz 
     $ sudo apt-get install unclutter
     
 Nach einem Neustart ist der Cursor nicht mehr sichtbar.
+
+
+# ToDo
+* Testen :-)
+* OBD-API: Anpassung für SocketCAN, Entwicklung eines SocketCAN Tiny-CAN API Treibers
+* OBD-API: Datenbank („obd_db.c/obd_decode“) erweitern, PIDs
+* OBD-API: Unterschiedliche Polling Intervalle für die einzelnen PIDs
+* OBD-API: Nur PIDs abfragen die auch angezeigt werden
+* OBD-API: Dokumentation
+* GUI: Portierung auf GTK3
 
 
 

@@ -16,7 +16,7 @@ RES_DIR = ./../res
 C_PREPROC = -DENABLE_NLS
 
 CFLAGS = `pkg-config --cflags gtk+-2.0 libxml-2.0` -Wall \
-         -I$(SRC_DIR) -I$(SRC_DIR)/lib -I$(SRC_DIR)/LinuxLib -I$(SRC_DIR)/obd \
+         -I$(SRC_DIR) -I$(SRC_DIR)/lib -I$(SRC_DIR)/LinuxLib -I$(SRC_DIR)/obd -I$(SRC_DIR)/www \
          -I$(TCAN_API_DIR) -pthread -g0 -O0 #-g0 -O2 ggdb3
 
 LIBS = `pkg-config --libs gtk+-2.0 libxml-2.0` -ldl -lm
@@ -61,6 +61,10 @@ SRC_OBJS = \
   $(OBJ_DIR)/trace.o \
   $(OBJ_DIR)/vin_info_win.o \
   $(OBJ_DIR)/vin_wdg.o \
+  $(OBJ_DIR)/xml_database.o \
+  $(OBJ_DIR)/sock_lib.o \
+  $(OBJ_DIR)/open_xc.o \
+  $(OBJ_DIR)/mhs_file_event.o \
   $(OBJ_DIR)/can_drv_linux.o 
 
 all: create_dirs create_app
@@ -79,6 +83,9 @@ $(OBJ_DIR)/mhs_event.o: $(SRC_DIR)/LinuxLib/mhs_event.c
 
 $(OBJ_DIR)/mhs_thread.o: $(SRC_DIR)/LinuxLib/mhs_thread.c
 	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@
+  
+$(OBJ_DIR)/mhs_file_event.o: $(SRC_DIR)/LinuxLib/mhs_file_event.c
+	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@  
 
 $(OBJ_DIR)/can_autobaud.o: $(SRC_DIR)/can_autobaud.c 
 	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@    
@@ -184,6 +191,15 @@ $(OBJ_DIR)/vin_info_win.o: $(SRC_DIR)/vin_info_win.c
 
 $(OBJ_DIR)/vin_wdg.o: $(SRC_DIR)/vin_wdg.c 
 	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@
+  
+$(OBJ_DIR)/xml_database.o: $(SRC_DIR)/www/xml_database.c 
+	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@
+  
+$(OBJ_DIR)/sock_lib.o: $(SRC_DIR)/www/sock_lib.c 
+	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@   
+
+$(OBJ_DIR)/open_xc.o: $(SRC_DIR)/www/open_xc.c 
+	$(CC) $(CFLAGS) $(C_PREPROC) -c $< -o $@      
 
 $(OBJ_DIR)/can_drv_linux.o: $(TCAN_API_DIR)/can_drv_linux.c
 	$(CC) $(CFLAGS) -c $< -o $@
